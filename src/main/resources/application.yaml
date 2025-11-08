@@ -1,9 +1,11 @@
 spring:
   application:
     name: springtutorial
+  config:
+    import: optional:file:.env[.properties]
 
   datasource:
-    url: jdbc:sqlserver://${DB_HOST}:${DB_PORT};databaseName=${DB_NAME};trustServerCertificate=true
+    url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver

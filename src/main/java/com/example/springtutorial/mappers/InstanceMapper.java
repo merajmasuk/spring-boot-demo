@@ -7,11 +7,14 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {MetadataMapper.class})
+@Mapper(componentModel = "spring", uses = {MetadataMapper.class, PersonMapper.class})
 public interface InstanceMapper {
-    @Mapping(target = "metadata", source = ".")
+    @Mapping(target = "createdBy", source = "createdBy")
+    @Mapping(target = "lastModifiedBy", source = "lastModifiedBy")
+    @Mapping(target = "createdAt", expression = "java(instance.getCreatedAt().toString())")
+    @Mapping(target = "lastModifiedAt", expression = "java(instance.getLastModifiedAt().toString())")
     InstanceDTO  toDTO(Instance instance);
-    List<InstanceDTO> toDTOs(List<Instance> instances);
+    List<InstanceDTO> toDTOList(List<Instance> instances);
 
     Instance toEntity(InstanceDTO instanceDTO);
 }
