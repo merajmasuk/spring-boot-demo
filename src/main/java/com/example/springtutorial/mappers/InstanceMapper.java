@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {MetadataMapper.class, PersonMapper.class})
+@Mapper(componentModel = "spring", uses = {PersonMapper.class})
 public interface InstanceMapper {
     @Mapping(target = "createdBy", source = "createdBy")
     @Mapping(target = "lastModifiedBy", source = "lastModifiedBy")
