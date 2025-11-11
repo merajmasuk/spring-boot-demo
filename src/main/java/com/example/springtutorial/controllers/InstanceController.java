@@ -53,7 +53,7 @@ public class InstanceController {
 
     @GetMapping
     public ResponseEntity<BaseResponse<?>> getInstanceList(
-            @RequestParam String titleLike,
+            @RequestParam(required = false, defaultValue = "") String titleLike,
             @PageableDefault(
                     sort = "lastModifiedAt",
                     direction = Sort.Direction.DESC

@@ -14,3 +14,13 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
+
+  cloud:
+    aws:
+      s3:
+        endpoint: ${S3_ENDPOINT}
+        region: ${S3_REGION}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      bucket: practice
