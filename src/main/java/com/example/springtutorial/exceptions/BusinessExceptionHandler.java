@@ -14,15 +14,15 @@ public class BusinessExceptionHandler {
     public ResponseEntity<BaseResponse<?>> handleBusinessException(BusinessException ex) {
         logRootError(
                 ex.getStackTrace(),
-                "[Guideline] : Business Exception in {}.{}():{} - {}",
+                "[SERVICE] : Business Exception in {}.{}():{} - {}",
                 ex.getMessage(),
-                "[Guideline] : Business Exception: {}"
+                "[SERVICE] : Business Exception: {}"
         );
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST.value())
                 .body(
                         BaseResponse.builder()
-                                .status(HttpStatus.BAD_REQUEST.value())
+                                .success(false)
                                 .error(ex.getMessage())
                                 .errorCode(ex.getMessage())
                                 .build()
@@ -33,15 +33,15 @@ public class BusinessExceptionHandler {
     public ResponseEntity<BaseResponse<?>> handleServerErrorException(Exception ex) {
         logRootError(
                 ex.getStackTrace(),
-                "[Guideline] : Internal server error in {}.{}():{} - {}",
+                "[SERVICE] : Internal server error in {}.{}():{} - {}",
                 ex.getMessage(),
-                "[Guideline] : Internal server error: {}"
+                "[SERVICE] : Internal server error: {}"
         );
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body(
                         BaseResponse.builder()
-                                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                                .success(false)
                                 .error(ex.getMessage())
                                 .errorCode("SOMETHING_WENT_WRONG")
                                 .build()

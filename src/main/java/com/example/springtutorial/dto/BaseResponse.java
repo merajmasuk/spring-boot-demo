@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class BaseResponse<T> {
-    private Integer status;
+    private boolean success;
     private T data;
     private String errorCode;
     private String error;

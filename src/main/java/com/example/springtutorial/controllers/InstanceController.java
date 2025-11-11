@@ -1,15 +1,17 @@
 package com.example.springtutorial.controllers;
 
+import com.example.springtutorial.assemblers.InstanceModelAssembler;
 import com.example.springtutorial.dao.InstanceDAO;
 import com.example.springtutorial.dto.BaseResponse;
 import com.example.springtutorial.dto.InstanceDTO;
-import com.example.springtutorial.dto.PageDTO;
 import com.example.springtutorial.exceptions.BusinessException;
 import com.example.springtutorial.services.InstanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +24,16 @@ import java.util.UUID;
 public class InstanceController {
 
     private final InstanceService instanceService;
+    private final InstanceModelAssembler instanceModelAssembler;
 
     @PostMapping("/")
     public ResponseEntity<BaseResponse<?>> createInstance(@RequestBody InstanceDAO request) throws BusinessException {
         InstanceDTO response = instanceService.createInstance(request);
+        EntityModel<InstanceDTO> entityModel = EntityModel.of(response);
         return new ResponseEntity<>(
                 BaseResponse.builder()
-                        .status(HttpStatus.CREATED.value())
-                        .data(response)
+                        .success(true)
+                        .data(entityModel)
                         .build(),
                 HttpStatus.CREATED
         );
@@ -38,26 +42,27 @@ public class InstanceController {
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<?>> getInstance(@PathVariable UUID id) throws BusinessException {
         InstanceDTO response = instanceService.getInstanceById(id);
+        EntityModel<InstanceDTO> entityModel = instanceModelAssembler.toModel(response);
         return ResponseEntity.ok(
                 BaseResponse.builder()
-                        .status(HttpStatus.OK.value())
-                        .data(response)
+                        .success(true)
+                        .data(entityModel)
                         .build()
         );
     }
 
     @GetMapping
-    public ResponseEntity<BaseResponse<?>> getAllInstances(
+    public ResponseEntity<BaseResponse<?>> getInstanceList(
             @RequestParam String titleLike,
             @PageableDefault(
                     sort = "lastModifiedAt",
                     direction = Sort.Direction.DESC
             ) Pageable pageable
     ) {
-        PageDTO<InstanceDTO> response = instanceService.getInstancesList(titleLike, pageable);
+        PagedModel<EntityModel<InstanceDTO>> response = instanceService.getInstancesList(titleLike, pageable);
         return ResponseEntity.ok(
                 BaseResponse.builder()
-                        .status(HttpStatus.OK.value())
+                        .success(true)
                         .data(response)
                         .build()
         );
@@ -66,10 +71,11 @@ public class InstanceController {
     @PutMapping("/{id}")
     public ResponseEntity<BaseResponse<?>> updateInstance(@PathVariable UUID id, @RequestBody InstanceDAO request) throws BusinessException {
         InstanceDTO response = instanceService.updateInstance(id, request);
+        EntityModel<InstanceDTO> entityModel = instanceModelAssembler.toModel(response);
         return ResponseEntity.ok(
                 BaseResponse.builder()
-                        .status(HttpStatus.OK.value())
-                        .data(response)
+                        .success(true)
+                        .data(entityModel)
                         .build()
         );
     }
@@ -80,7 +86,7 @@ public class InstanceController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/restore/{id}")
+    @PatchMapping("/restore/{id}")
     public ResponseEntity<BaseResponse<?>> restoreInstance(@PathVariable UUID id, @RequestBody InstanceDAO request) throws BusinessException {
         instanceService.restoreInstance(id);
         return ResponseEntity.noContent().build();
