@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/instance")
+@RequestMapping("/api/v1/instance")
 public class InstanceController {
 
     private final InstanceService instanceService;
