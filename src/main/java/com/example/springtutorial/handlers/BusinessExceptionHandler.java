@@ -1,6 +1,7 @@
-package com.example.springtutorial.exceptions;
+package com.example.springtutorial.handlers;
 
 import com.example.springtutorial.dto.BaseResponse;
+import com.example.springtutorial.exceptions.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
